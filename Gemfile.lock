@@ -1,0 +1,16 @@
+PATH
+  remote: .
+  specs:
+    alaska (0.0.1)
+      execjs
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    execjs (2.3.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  alaska!
