@@ -108,7 +108,7 @@ class Alaska < ExecJS::Runtime
 
   def compile_source(contents)
     out = nil
-    #@benchmarks << Benchmark.ms {
+    @benchmarks << Benchmark.measure {
       sock = Net::BufferedIO.new(connection)
       request = Net::HTTP::Post.new("/")
       request['Connection'] = 'keep-alive'
@@ -121,7 +121,7 @@ class Alaska < ExecJS::Runtime
 
       response.reading_body(sock, request.response_body_permitted?) { }
       out = response.body
-    #}
+    }
     out
   end
 
@@ -138,9 +138,9 @@ class Alaska < ExecJS::Runtime
     if @debug
       avg = "N/A"
       if @benchmarks.size > 0
-        avg = @benchmarks.inject(0.0) { |sum, el| sum + el } / @benchmarks.size
+        avg = @benchmarks.inject(0.0) { |sum, el| sum + (el.total) } / @benchmarks.size
       end
-      puts "alaska shutdown... #{@benchmarks.length} assets pipelined through alaska.js: #{avg}ms average response time"
+      puts "alaska shutdown... #{@benchmarks.length} assets pipelined through alaska.js: #{avg.round(2)}s average response time"
     end
   end
 

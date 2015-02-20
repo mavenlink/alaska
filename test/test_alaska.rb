@@ -5,7 +5,7 @@ require 'alaska'
 
 describe Alaska do
   before do
-    @alaska = Alaska.new(:debug => false)
+    @alaska = Alaska.new(:debug => true)
     @alaska_context = Alaska::Context.new(@alaska)
     @return_42 = "(function() { var f = 42; return 42;})()"
   end
