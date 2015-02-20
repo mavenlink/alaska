@@ -84,14 +84,27 @@ class Alaska < ExecJS::Runtime
       command_options = [alaska_js_path, "--debug #{!!@debug}"] # --other --command-line --options --go --here
 
       @pid = Process.spawn({"PORT" => @port.to_s}, @nodejs_cmd, *command_options, {:err => :out})
+
       s = nil
-      while true
+      checks = 0
+      while checks < 128
         begin
-          s = UNIXSocket.new(@port)
+          checks += 1
+          if File.exists?(@port)
+            s = UNIXSocket.new(@port)
+          else
+            sleep 0.5
+            next
+          end
           break
         rescue Errno::ENOENT, Errno::ECONNREFUSED
           s = nil
         end
+      end
+
+      if checks > 127
+        ensure_shutdown
+        raise ExecJS::RuntimeError, "unable to connect to alaska.js server"
       end
 
       trap('INT') {
@@ -136,11 +149,12 @@ class Alaska < ExecJS::Runtime
 
   def stats
     if @debug
-      avg = "N/A"
+      avg_str = "N/A"
       if @benchmarks.size > 0
         avg = @benchmarks.inject(0.0) { |sum, el| sum + (el.total) } / @benchmarks.size
+        avg_str = avg.round(4).to_s
       end
-      puts "alaska shutdown... #{@benchmarks.length} assets pipelined through alaska.js: #{avg.round(4)}s average response time"
+      puts "alaska shutdown... #{@benchmarks.length} assets pipelined through alaska.js: #{avg_str}s average response time"
     end
   end
 
@@ -150,7 +164,7 @@ class Alaska < ExecJS::Runtime
       #Process.detach(@pid) rescue Errno::ECHILD
       Process.kill("TERM", @pid) #rescue Errno::ECHILD
       Process.wait(@pid) #rescue Errno::ECHILD
-      connection.close unless connection.closed?
+      @conn.close unless @conn.nil? || @conn.closed?
       @port = nil
       @conn = nil
       @pid = nil
