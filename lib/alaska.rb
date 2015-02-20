@@ -140,7 +140,7 @@ class Alaska < ExecJS::Runtime
       if @benchmarks.size > 0
         avg = @benchmarks.inject(0.0) { |sum, el| sum + (el.total) } / @benchmarks.size
       end
-      puts "alaska shutdown... #{@benchmarks.length} assets pipelined through alaska.js: #{avg.round(2)}s average response time"
+      puts "alaska shutdown... #{@benchmarks.length} assets pipelined through alaska.js: #{avg.round(4)}s average response time"
     end
   end
 
