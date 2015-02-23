@@ -1,6 +1,6 @@
 # Alaska
 
-At Mavenlink we utilize the rails3 asset pipeline (known as sprockets) to compile our coffeescript into javascript. We began charting the time spent waiting for our application to load (and compile coffeescript) over the past 6 months and determined that if we let the trend continue, we would reach "peak coffeescript production"... meaning our developers would literally be spending more time waiting for their coffeescript to compile per page load, than spent looking at the results!
+At Mavenlink we utilize the rails3 asset pipeline (known as sprockets) to compile our coffeescript into javascript. We began charting the time spent waiting for our application to load (and compile coffeescript) over the past 6 months and determined that if we let the trend continue, we would reach "peak coffeescript production"... meaning our developers would literally be spending more time waiting for their coffeescript to compile per page load, than spent looking at the results! By default, the execjs runtime runs a separate node process for each asset that needs to be compiled, reloading the compiler every time. Instead, `Alaska` sets up a persistent server process with the compiler already loaded. This greatly reduces the overall time spent turning coffeescript into javascript.
 
 # Peak Coffeescript
 
@@ -16,7 +16,8 @@ In the default execjs runtime, coffeescript files are converted to javascript fi
 4. The node interperater is then executed with this tempory file as the argument, and the standard output of that process is delivered back to the sprockets system
 5. Sprockets continues with this process for each remaining file, invoking the /usr/bin/node process for each file to be compiled.
 
-To break this down into laymens terms, it means that for every gallon of oil (compiled coffeescript) we want to pull out of the ground, we have to send a truck, with its out drill setup out to the location. It should be immediatly appearant that this approach will begin to be slower especially as more and more coffeescript is being produced.
+To break this down into laymens terms, it means that for every gallon of oil (compiled coffeescript) we want to pull out of the ground, we have to send a truck, with its own drill, out to the location.
+It should be immediately apparent that this approach will begin to be slower especially as more and more coffeescript is being produced.
 
 ## ExecJS::Alaska
 
@@ -29,6 +30,7 @@ In contrast to the default execjs runtime, the alaska runtime constructs a persi
 
 With this caching of the coffeescript compilation module, and the persistent nodejs compliation server process, we can reduce the roundtrip time for each coffeescript compilation down to several milliseconds (on average in mavenlinks primary rails application the roundtrip time is 16ms)
 
+In summary, the difference in mechanism is very similar to the differences between traditional CGI vs. FCGI
 
 # DRILL BABY DRILL
 
@@ -40,3 +42,11 @@ In a rails initializer file (e.g. `config/initializers/execjs.rb`) declare the `
       # use alaska.js pipelining only when precompiling assets
       ExecJS.runtime = Alaska.new(:debug => true)
     end
+
+Since this only modifies the `ExecJS` runtime, you should not have to change any of your workflow to make use of `alaska`
+
+If you specify `:debug => true` you will additionally see in your `rails server` output some helpful details on the operation of the pipeline, e.g.
+
+    Listening on port /tmp/alaska20150223-8969-ds0fhl
+    alaska.js started
+    alaska shutdown... 1037 assets pipelined through alaska.js: 0.0024s average response time
