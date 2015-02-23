@@ -34,7 +34,11 @@ In summary, the difference in mechanism is very similar to the differences betwe
 
 # DRILL BABY DRILL
 
-In a rails initializer file (e.g. `config/initializers/execjs.rb`) declare the `ExecJS.runtime` to be an instance of `Alaska`
+First you must declare the dependency in your gem management system, for instance your `Gemfile` should be modified to include
+
+    gem 'alaska', :git => 'git@github.com:mavenlink/alaska.git'
+
+Then in a rails initializer file (e.g. `config/initializers/execjs.rb`) declare the `ExecJS.runtime` to be an instance of `Alaska`
 
     require 'alaska'
 
