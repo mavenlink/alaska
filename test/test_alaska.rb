@@ -14,6 +14,12 @@ describe Alaska do
     js_result.must_equal 42
   end
 
+  it "raises an ExecJS::ProgramError on error" do
+    lambda {
+      @alaska_context.eval("(function() { throw new Error('foo\\nbar', 0, 'test.js'); })()")
+    }.must_raise(ExecJS::ProgramError)
+  end
+
   it "requires js to be in a self-executing function" do
     js_result = -1
 

@@ -45,7 +45,7 @@ var server = http.createServer(function(req, res) {
         }
       }
     } catch(err) {
-      webPrint(res, '["err", "' + (err.toString()) + '"]');
+      webPrint(res, JSON.stringify(["err", err.toString()]));
     }
   });
 });
