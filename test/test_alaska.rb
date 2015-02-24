@@ -1,6 +1,5 @@
 require 'minitest/autorun'
 require 'minitest/spec'
-require 'test/unit'
 require 'alaska'
 
 describe Alaska do
