@@ -29,11 +29,6 @@ class Alaska < ExecJS::Runtime
     def exec(src, options = {})
       if src.length > 0
 
-        #TODO: figure out better solution
-        if src.include?("processor = autoprefixer")
-          src = "(function() { #{src} })()"
-        end
-
         src = src.encode('UTF-8', :undef => :replace, :replace => '')
         src = @runtime.compile_source(src)
 
