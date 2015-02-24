@@ -69,6 +69,10 @@ class Alaska < ExecJS::Runtime
     @benchmarks = []
   end
 
+  def name
+    "Alaska"
+  end
+
   def connection
     @port ||= begin
       srand
