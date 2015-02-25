@@ -1,6 +1,5 @@
 require 'minitest/autorun'
 require 'minitest/spec'
-require 'test/unit'
 require 'alaska'
 
 describe Alaska do
@@ -13,6 +12,12 @@ describe Alaska do
   it "talks to nodejs and allows js to be executed" do
     js_result = @alaska_context.eval(@return_42)
     js_result.must_equal 42
+  end
+
+  it "raises an ExecJS::ProgramError on error" do
+    lambda {
+      @alaska_context.eval("(function() { throw new Error('foo\\nbar', 0, 'test.js'); })()")
+    }.must_raise(ExecJS::ProgramError)
   end
 
   it "requires js to be in a self-executing function" do
