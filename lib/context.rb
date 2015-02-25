@@ -10,8 +10,7 @@ module Alaska
   class Context < ExecJS::Runtime::Context
     # runtime is an instance of Alaska
     # src is the js code to be eval()'d in the nodejs context
-    def initialize(runtime, src = "")
-      # third step, repeated .. yes, at least twice for common.css
+    def initialize(runtime, src = "") # third step, repeated .. yes, at least twice for common.css
       @runtime = runtime
       @benchmarks = []
 
@@ -43,10 +42,8 @@ module Alaska
         if status == "ok"
           value
         elsif value =~ /SyntaxError:/
-          ensure_shutdown #NOTE: ???
           raise ExecJS::RuntimeError, value
         else
-          ensure_shutdown #NOTE: ???
           raise ExecJS::ProgramError, value
         end
       else
