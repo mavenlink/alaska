@@ -1,11 +1,12 @@
 require 'minitest/autorun'
 require 'minitest/spec'
 require 'alaska'
+require 'execjs'
 
 describe Alaska do
   before do
-    @alaska = Alaska.new(:debug => true)
-    @alaska_context = Alaska::Context.new(@alaska)
+    @alaska = Alaska::Runtime.new(:debug => false)
+    @alaska_context = @alaska.context_class.new(@alaska)
     @return_42 = "(function() { var f = 42; return 42;})()"
   end
 
@@ -40,5 +41,39 @@ describe Alaska do
 
     js_result = @alaska_context.eval(@return_42)
     js_result.must_equal 42
+  end
+
+  it "should function ok with threads and execjs runtime" do
+    ExecJS.runtime = @alaska
+
+    context_a = ExecJS.compile("")
+
+    a = context_a.call("(function(a) { return a; })", 123)
+
+    a.must_equal 123
+
+    g_err_a = nil
+    g_err_b = nil
+
+    a = Thread.new {
+      begin
+        b = context_a.call("(function() { asd() })")
+      rescue => err_a
+        g_err_a = err_a
+      end
+    }
+
+    context_b = ExecJS.compile("")
+
+    begin
+      c = context_b.call("(function() { asd) })")
+    rescue => err_b
+      g_err_b = err_b
+    end
+
+    a.join
+
+    g_err_a.must_be_kind_of(ExecJS::ProgramError)
+    g_err_b.must_be_kind_of(ExecJS::RuntimeError)
   end
 end
