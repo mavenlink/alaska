@@ -13,5 +13,4 @@ Gem::Specification.new do |s|
   s.add_dependency 'execjs'
   s.add_development_dependency 'rake', '~> 10.4'
   s.add_development_dependency 'minitest', '~> 5.5.1'
-  s.add_development_dependency 'execjs', '~> 2.3.0'
 end

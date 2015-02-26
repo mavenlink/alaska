@@ -16,6 +16,5 @@ PLATFORMS
 
 DEPENDENCIES
   alaska!
-  execjs (~> 2.3.0)
   minitest (~> 5.5.1)
   rake (~> 10.4)

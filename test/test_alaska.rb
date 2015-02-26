@@ -48,14 +48,14 @@ describe Alaska do
 
     context_a = ExecJS.compile("")
 
-    a = context_a.call("(function(a) { return a; })", 123)
+    result_a = context_a.call("(function(a) { return a; })", 123)
 
-    a.must_equal 123
+    result_a.must_equal 123
 
     g_err_a = nil
     g_err_b = nil
 
-    a = Thread.new {
+    make_program_error_thread = Thread.new {
       begin
         b = context_a.call("(function() { asd() })")
       rescue => err_a
@@ -71,7 +71,7 @@ describe Alaska do
       g_err_b = err_b
     end
 
-    a.join
+    make_program_error_thread.join
 
     g_err_a.must_be_kind_of(ExecJS::ProgramError)
     g_err_b.must_be_kind_of(ExecJS::RuntimeError)

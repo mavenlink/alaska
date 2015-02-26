@@ -20,34 +20,31 @@ module Alaska
       eval(src)
     end
 
-    def eval(src, options = {})
+    def eval(src)
       if /\S/ =~ src #IMPORTANT! /\S/ =~ "()" => 0
         exec(src)
       end
     end
 
-    def exec(src, options = {})
-      if src.length > 0
+    def exec(src)
+      return "" unless src.length > 0
 
-        src = src.encode('UTF-8', :undef => :replace, :replace => '')
-        src = compile_source(src)
+      src = src.encode('UTF-8', :undef => :replace, :replace => '')
+      src = compile_source(src)
 
-        # src is either an empty object
-        # OR a valid JSON string in the form
-        #   ['ok', 'result-of-coffeescript-or-sass-compiler']
-        # OR if an error occured
-        #   ['err', 'some sort of error to be presented to the developer as a sprockets error']
-        #
-        status, value = src.empty? ? [] : ::JSON.parse(src, create_additions: false)
-        if status == "ok"
-          value
-        elsif value =~ /SyntaxError:/
-          raise ExecJS::RuntimeError, value
-        else
-          raise ExecJS::ProgramError, value
-        end
+      # src is either an empty object
+      # OR a valid JSON string in the form
+      #   ['ok', 'result-of-coffeescript-or-sass-compiler']
+      # OR if an error occured
+      #   ['err', 'some sort of error to be presented to the developer as a sprockets error']
+      #
+      status, value = src.empty? ? [] : ::JSON.parse(src, create_additions: false)
+      if status == "ok"
+        value
+      elsif value =~ /SyntaxError:/
+        raise ExecJS::RuntimeError, value
       else
-        ""
+        raise ExecJS::ProgramError, value
       end
     end
 
