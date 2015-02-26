@@ -32,7 +32,7 @@ describe Alaska do
     js_result.must_equal -1
   end
 
-  it "shutsdown the connection on error, but re-establishes on subsequent calls" do
+  it "safely allows subsequent #eval calls after runtime error" do
     js_result = @alaska_context.eval(@return_42)
     js_result.must_equal 42
 
