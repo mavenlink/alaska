@@ -38,7 +38,27 @@ module Alaska
     end
 
     def provision_socket
-      UNIXSocket.new(@port)
+      wait_socket = nil
+      checks = 0
+      max_retries = 6
+
+      while checks < max_retries
+        begin
+          checks += 1
+          wait_socket = UNIXSocket.new(@port)
+          break
+        rescue Errno::ENOENT, Errno::ECONNREFUSED, Errno::ENOTDIR
+          wait_socket = nil
+          sleep 0.5
+        end
+      end
+
+      if checks >= max_retries
+        ensure_shutdown
+        raise ExecJS::RuntimeError, "unable to connect to alaska.js server"
+      end
+
+      wait_socket
     end
 
     private
@@ -49,44 +69,16 @@ module Alaska
 
       @pid = Process.spawn({"PORT" => @port.to_s}, @nodejs_cmd, *command_options, {:err => :out})
 
-      wait_socket = nil
-      checks = 0
-      while checks < 128
-        begin
-          checks += 1
-          if File.exists?(@port)
-            wait_socket = UNIXSocket.new(@port)
-          else
-            sleep 0.5
-            next
-          end
-          break
-        rescue Errno::ENOENT, Errno::ECONNREFUSED
-          wait_socket = nil
-        end
-      end
-
-      if checks > 127
-        ensure_shutdown
-        raise ExecJS::RuntimeError, "unable to connect to alaska.js server"
-      end
-
-      trap('INT') {
-        ensure_shutdown
-      }
-
       at_exit do
         ensure_shutdown
       end
-
-      wait_socket.close && wait_socket.closed?
     end
 
     def ensure_shutdown
       return unless @pid
 
-      Process.kill("TERM", @pid) #rescue Errno::ECHILD
-      Process.wait(@pid) #rescue Errno::ECHILD
+      Process.kill("TERM", @pid) rescue Errno::ECHILD
+      Process.wait(@pid) rescue Errno::ECHILD
 
       @port = nil
       @pid = nil
