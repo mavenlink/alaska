@@ -26,8 +26,7 @@ var webPrint = function(res, respBody) {
 };
 
 var server = http.createServer(function(req, res) {
-  req.shouldKeepAlive = true;
-  //req.setSocketKeepAlive(true, 0);
+  //req.shouldKeepAlive = fal;
   var contents = new String();
   req.on(dataEvent, function (dataIn) {
     contents += dataIn;
@@ -51,6 +50,7 @@ var server = http.createServer(function(req, res) {
 });
 
 var port = process.env.PORT || 3001;
+//server.timeout = 0;
 server.listen(port);
 
 if (debug) {

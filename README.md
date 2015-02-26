@@ -19,7 +19,7 @@ In the default execjs runtime, coffeescript files are converted to javascript fi
 To break this down into laymens terms, it means that for every gallon of oil (compiled coffeescript) we want to pull out of the ground, we have to send a truck, with its own drill, out to the location.
 It should be immediately apparent that this approach will begin to be slower especially as more and more coffeescript is being produced.
 
-## ExecJS::Alaska
+## ExecJS::Alaska::Runtime
 
 In contrast to the default execjs runtime, the alaska runtime constructs a persistent pipeline to the nodejs interepreter, greatly reducing roundtrip time of coffeescript compliation.
 
@@ -28,11 +28,11 @@ In contrast to the default execjs runtime, the alaska runtime constructs a persi
 3. The initial coffeescript compilation module is then loaded _once_ in the nodejs runtime
 4. For each file to be compiled, a http request is made with the request body set to the coffeescript, the response body is the compiled javascript, which is delivered back to sprockets
 
-With this caching of the coffeescript compilation module, and the persistent nodejs compliation server process, we can reduce the roundtrip time for each coffeescript compilation down to several milliseconds (on average in mavenlinks primary rails application the roundtrip time is 16ms)
+With this caching of the coffeescript compilation module, and the persistent nodejs compliation server process, we can reduce the roundtrip time for each coffeescript compilation down to several milliseconds (on average in mavenlink's primary rails application the roundtrip time is 16ms)
 
 In summary, the difference in mechanism is very similar to the differences between traditional CGI vs. FCGI
 
-# DRILL BABY DRILL
+# Getting Started
 
 First you must declare the dependency in your gem management system, for instance your `Gemfile` should be modified to include
 
@@ -44,7 +44,7 @@ Then in a rails initializer file (e.g. `config/initializers/execjs.rb`) declare 
 
     if Rails.env == "development" || Rails.env == "test" || ENV["RAILS_GROUPS"] == "assets"
       # use alaska.js pipelining only when precompiling assets
-      ExecJS.runtime = Alaska.new(:debug => true)
+      ExecJS.runtime = Alaska::Runtime.new(:debug => true)
     end
 
 Since this only modifies the `ExecJS` runtime, you should not have to change any of your workflow to make use of `alaska`
@@ -54,3 +54,5 @@ If you specify `:debug => true` you will additionally see in your `rails server`
     Listening on port /tmp/alaska20150223-8969-ds0fhl
     alaska.js started
     alaska shutdown... 1037 assets pipelined through alaska.js: 0.0024s average response time
+
+## DRILL BABY DRILL!
