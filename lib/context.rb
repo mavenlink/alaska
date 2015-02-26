@@ -2,7 +2,6 @@ require "execjs/runtime"
 require "execjs/module"
 require "net/http"
 require "socket"
-require 'benchmark'
 require 'tempfile'
 require 'json'
 
@@ -12,7 +11,6 @@ module Alaska
     # src is the js code to be eval()'d in the nodejs context
     def initialize(runtime, src = "") # third step, repeated .. yes, at least twice for common.css
       @runtime = runtime
-      @benchmarks = []
 
       # compile context source, in most cases
       # this is something like the CoffeeScript compiler
@@ -54,97 +52,20 @@ module Alaska
 
     private
 
-    def ensure_shutdown
-      return unless @pid
-
-      stats
-      Process.kill("TERM", @pid) #rescue Errno::ECHILD
-      Process.wait(@pid) #rescue Errno::ECHILD
-
-      @conn.close unless @conn.nil? || @conn.closed?
-      @port = nil
-      @conn = nil
-      @pid = nil
-    end
-
-    def connection
-      @port ||= begin
-        srand
-        tmpfile = Tempfile.new("alaska")
-        path = tmpfile.path
-        tmpfile.close
-        tmpfile.unlink
-        path
-      end
-
-      @conn ||= begin
-        alaska_js_path = File.join(File.dirname(File.expand_path(__FILE__)), '../alaska.js')
-        command_options = [alaska_js_path, "--debug #{!!@runtime.debug}"] # --other --command-line --options --go --here
-
-        @pid = Process.spawn({"PORT" => @port.to_s}, @runtime.nodejs_cmd, *command_options, {:err => :out})
-
-        s = nil
-        checks = 0
-        while checks < 128
-          begin
-            checks += 1
-            if File.exists?(@port)
-              s = UNIXSocket.new(@port)
-            else
-              sleep 0.5
-              next
-            end
-            break
-          rescue Errno::ENOENT, Errno::ECONNREFUSED
-            s = nil
-          end
-        end
-
-        if checks > 127
-          ensure_shutdown
-          raise ExecJS::RuntimeError, "unable to connect to alaska.js server"
-        end
-
-        trap('INT') {
-          ensure_shutdown
-        }
-
-        at_exit do
-          ensure_shutdown
-        end
-
-        s
-      end
-    end
-
     def compile_source(contents)
-      out = nil
-      @benchmarks << Benchmark.measure {
-        sock = Net::BufferedIO.new(connection)
-        request = Net::HTTP::Post.new("/")
-        request['Connection'] = 'keep-alive'
-        request.body = contents
-        request.exec(sock, "1.1", "/")
+      sock = Net::BufferedIO.new(@runtime.provision_socket)
+      request = Net::HTTP::Post.new("/")
+      request['Connection'] = 'close'
+      request.body = contents
+      request.exec(sock, "1.1", "/")
 
-        begin
-          response = Net::HTTPResponse.read_new(sock)
-        end while response.kind_of?(Net::HTTPContinue)
+      begin
+        response = Net::HTTPResponse.read_new(sock)
+      end while response.kind_of?(Net::HTTPContinue)
 
-        response.reading_body(sock, request.response_body_permitted?) { }
-        out = response.body
-      }
-      out
-    end
-
-    def stats
-      if @runtime.debug
-        avg_str = "N/A"
-        if @benchmarks.size > 0
-          avg = @benchmarks.inject(0.0) { |sum, el| sum + (el.total) } / @benchmarks.size
-          avg_str = avg.round(4).to_s
-        end
-        puts "alaska shutdown... #{@benchmarks.length} assets pipelined through alaska.js: #{avg_str}s average response time"
-      end
+      response.reading_body(sock, request.response_body_permitted?) { }
+      sock.close
+      response.body
     end
   end
 end
