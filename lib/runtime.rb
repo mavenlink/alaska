@@ -3,7 +3,7 @@ require "execjs/module"
 
 module Alaska
   class Runtime < ExecJS::Runtime
-    attr_accessor :debug, :nodejs_cmd, :port
+    attr_accessor :debug, :nodejs_cmd, :port, :pid, :semaphore
 
     def initialize(opts = {})
       @debug = opts[:debug]
@@ -17,6 +17,7 @@ module Alaska
         path
       end
 
+      @pid = nil
       @semaphore = Mutex.new
     end
 
