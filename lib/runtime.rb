@@ -3,7 +3,7 @@ require "execjs/module"
 
 module Alaska
   class Runtime < ExecJS::Runtime
-    attr_accessor :debug, :nodejs_cmd, :port
+    attr_accessor :debug, :nodejs_cmd, :port, :pid, :semaphore
 
     def initialize(opts = {})
       @debug = opts[:debug]
@@ -17,7 +17,8 @@ module Alaska
         path
       end
 
-      run_server
+      @pid = nil
+      @semaphore = Mutex.new
     end
 
     def name
@@ -37,7 +38,10 @@ module Alaska
       Alaska::Context
     end
 
+    #NOTE: this should be thread-safe
     def provision_socket
+      ensure_startup unless @pid
+
       wait_socket = nil
       checks = 0
       max_retries = 6
@@ -63,15 +67,19 @@ module Alaska
 
     private
 
-    def run_server
-      alaska_js_path = File.join(File.dirname(File.expand_path(__FILE__)), '../alaska.js')
-      command_options = [alaska_js_path, "--debug #{!!@debug}"] # --other --command-line --options --go --here
+    def ensure_startup
+      @semaphore.synchronize {
+        return if @pid
 
-      @pid = Process.spawn({"PORT" => @port.to_s}, @nodejs_cmd, *command_options, {:err => :out})
+        alaska_js_path = File.join(File.dirname(File.expand_path(__FILE__)), '../alaska.js')
+        command_options = [alaska_js_path, "--debug #{!!@debug}"] # --other --command-line --options --go --here
 
-      at_exit do
-        ensure_shutdown
-      end
+        @pid = Process.spawn({"PORT" => @port.to_s}, @nodejs_cmd, *command_options, {:err => :out})
+
+        at_exit do
+          ensure_shutdown
+        end
+      }
     end
 
     def ensure_shutdown
