@@ -38,7 +38,7 @@ First you must declare the dependency in your gem management system, for instanc
 
     gem 'alaska', :git => 'git@github.com:mavenlink/alaska.git'
 
-Then in a rails initializer file (e.g. `config/initializers/execjs.rb`) declare the `ExecJS.runtime` to be an instance of `Alaska`
+Then in a rails initializer file (e.g. `config/initializers/execjs.rb`) declare the `ExecJS.runtime` to be an instance of `Alaska::Runtime`
 
     require 'alaska'
 
@@ -53,6 +53,5 @@ If you specify `:debug => true` you will additionally see in your `rails server`
 
     Listening on port /tmp/alaska20150223-8969-ds0fhl
     alaska.js started
-    alaska shutdown... 1037 assets pipelined through alaska.js: 0.0024s average response time
 
 ## DRILL BABY DRILL!
