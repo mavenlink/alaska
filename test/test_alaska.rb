@@ -124,4 +124,12 @@ describe Alaska do
     g_err_a.must_be_kind_of(ExecJS::ProgramError)
     g_err_b.must_be_kind_of(ExecJS::RuntimeError)
   end
+
+  it "should work when the runtime is shared between forked processes" do
+    fork_test_harness_pid = Process.spawn("bundle exec ruby test/fork_test_harness.rb")
+    exit_pid, exit_status = Process.wait2(fork_test_harness_pid)
+
+    exit_pid.must_equal(fork_test_harness_pid)
+    exit_status.must_equal(0)
+  end
 end
