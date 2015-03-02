@@ -1,22 +1,16 @@
 require "execjs/runtime"
 require "execjs/module"
+require 'tempfile'
 
 module Alaska
   class Runtime < ExecJS::Runtime
     attr_accessor :debug, :nodejs_cmd, :port, :pid, :semaphore
 
     def initialize(opts = {})
+      srand
+
       @debug = opts[:debug]
       @nodejs_cmd = "node"
-      @port = begin
-        srand
-        tmpfile = Tempfile.new("alaska")
-        path = tmpfile.path
-        tmpfile.close
-        tmpfile.unlink
-        path
-      end
-
       @pid = nil
       @semaphore = Mutex.new
     end
@@ -70,6 +64,14 @@ module Alaska
     def ensure_startup
       @semaphore.synchronize {
         return if @pid
+
+        @port = begin
+          tmpfile = Tempfile.new("alaska")
+          path = tmpfile.path
+          tmpfile.close
+          tmpfile.unlink
+          path
+        end
 
         alaska_js_path = File.join(File.dirname(File.expand_path(__FILE__)), '../alaska.js')
         command_options = [alaska_js_path, "--debug #{!!@debug}"] # --other --command-line --options --go --here
