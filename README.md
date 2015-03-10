@@ -19,7 +19,7 @@ In the default execjs runtime, coffeescript files are converted to javascript fi
 To break this down into laymens terms, it means that for every gallon of oil (compiled coffeescript) we want to pull out of the ground, we have to send a truck, with its own drill, out to the location.
 It should be immediately apparent that this approach will begin to be slower especially as more and more coffeescript is being produced.
 
-## ExecJS::Alaska::Runtime
+## Alaska::Runtime
 
 In contrast to the default execjs runtime, the alaska runtime constructs a persistent pipeline to the nodejs interepreter, greatly reducing roundtrip time of coffeescript compliation.
 
