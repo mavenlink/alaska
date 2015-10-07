@@ -2,6 +2,8 @@
 
 At Mavenlink we utilize the rails3/rails4 asset pipeline (known as sprockets) to compile our coffeescript into javascript. We began charting the time spent waiting for our application to load (and compile coffeescript) over the past 6 months and determined that if we let the trend continue, we would reach "peak coffeescript production"... meaning our developers would literally be spending more time waiting for their coffeescript to compile per page load, than spent looking at the results! By default, the execjs runtime runs a separate node process for each asset that needs to be compiled, reloading the compiler every time. Instead, `Alaska` sets up a persistent server process with the compiler already loaded. This greatly reduces the overall time spent turning coffeescript into javascript.
 
+[![Build Status](https://travis-ci.org/mavenlink/alaska.png)](https://travis-ci.org/mavenlink/alaska)
+
 # Peak Coffeescript
 
 To combat this trend, we developed `alaska` ... the persistent execjs runtime used for coffeescript compilation. The mechanism used is fundamentally different than the default execjs runtime. The differences are outlined below.
