@@ -1,13 +1,13 @@
 PATH
   remote: .
   specs:
-    alaska (0.0.7)
+    alaska (0.0.8)
       execjs
 
 GEM
   remote: https://rubygems.org/
   specs:
-    execjs (2.3.0)
+    execjs (2.6.0)
     minitest (5.5.1)
     rake (10.4.2)
 
