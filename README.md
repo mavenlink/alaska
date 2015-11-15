@@ -38,22 +38,28 @@ In summary, the difference in mechanism is very similar to the differences betwe
 
 First you must declare the dependency in your gem management system, for instance your `Gemfile` should be modified to include
 
-    gem 'alaska', :git => 'git@github.com:mavenlink/alaska.git'
+```ruby
+gem 'alaska', :git => 'git@github.com:mavenlink/alaska.git'
+```
 
 Then in a rails initializer file (e.g. `config/initializers/execjs.rb`) declare the `ExecJS.runtime` to be an instance of `Alaska::Runtime`
 
-    require 'alaska'
+```ruby
+require 'alaska'
 
-    if Rails.env == "development" || Rails.env == "test" || ENV["RAILS_GROUPS"] == "assets"
-      # use alaska.js pipelining only when precompiling assets
-      ExecJS.runtime = Alaska::Runtime.new(:debug => true)
-    end
+if Rails.env == "development" || Rails.env == "test" || ENV["RAILS_GROUPS"] == "assets"
+  # use alaska.js pipelining only when precompiling assets
+  ExecJS.runtime = Alaska::Runtime.new(:debug => true)
+end
+```
 
 Since this only modifies the `ExecJS` runtime, you should not have to change any of your workflow to make use of `alaska`
 
 If you specify `:debug => true` you will additionally see in your `rails server` output some helpful details on the operation of the pipeline, e.g.
 
-    Listening on port /tmp/alaska20150223-8969-ds0fhl
-    alaska.js started
+```
+Listening on port /tmp/alaska20150223-8969-ds0fhl
+alaska.js started
+```
 
 ## DRILL BABY DRILL!
