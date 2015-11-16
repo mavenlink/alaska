@@ -1,10 +1,10 @@
 Gem::Specification.new do |s|
   s.name        = 'alaska'
-  s.version     = '0.0.8'
+  s.version     = '1.0.0'
   s.date        = '2015-02-10'
-  s.summary     = "caching ExecJS runtime"
-  s.description = ""
-  s.authors     = ["Jon Bardin"]
+  s.summary     = "persistent ExecJS runtime"
+  s.description = "uses a single shared nodejs process to handle ExecJS::Runtime evaluation"
+  s.authors     = ["Jon Bardin", "Stephen Grider", "Ville Lautanala", "Giovanni Bonetti"]
   s.email       = 'diclophis@gmail.com'
   s.files       = ["lib/alaska.rb"]
   s.homepage    = "https://github.com/mavenlink/alaska"

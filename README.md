@@ -36,10 +36,16 @@ In summary, the difference in mechanism is very similar to the differences betwe
 
 # Getting Started
 
-First you must declare the dependency in your gem management system, for instance your `Gemfile` should be modified to include
+First you must declare the dependency in your gem management system, for instance to get the latest version your `Gemfile` should be modified to include
 
 ```ruby
 gem 'alaska', :git => 'git@github.com:mavenlink/alaska.git'
+```
+
+Or, if you prefer, the stable release channel is available via rubygems
+
+```ruby
+gem 'alaska', '~> 1.0.0'
 ```
 
 Then in a rails initializer file (e.g. `config/initializers/execjs.rb`) declare the `ExecJS.runtime` to be an instance of `Alaska::Runtime`
