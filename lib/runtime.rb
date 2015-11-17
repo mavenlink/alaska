@@ -38,7 +38,7 @@ module Alaska
 
       wait_socket = nil
       checks = 0
-      max_retries = 6
+      max_retries = 12
 
       while checks < max_retries
         begin
