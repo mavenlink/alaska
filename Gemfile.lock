@@ -1,8 +1,8 @@
 PATH
   remote: .
   specs:
-    alaska (1.0.2)
-      execjs
+    alaska (1.0.3)
+      execjs (~> 2.6)
 
 GEM
   remote: https://rubygems.org/
@@ -16,5 +16,5 @@ PLATFORMS
 
 DEPENDENCIES
   alaska!
-  minitest (~> 5.5.1)
+  minitest (~> 5.5)
   rake (~> 10.4)

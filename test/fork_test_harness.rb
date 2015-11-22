@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'alaska'
-require 'execjs'
+require 'alaska/runtime'
 
 alaska = Alaska::Runtime.new(:debug => false)
 alaska_context = alaska.context_class.new(alaska)

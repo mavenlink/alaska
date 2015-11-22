@@ -1,7 +1,6 @@
 require 'minitest/autorun'
 require 'minitest/spec'
-require 'alaska'
-require 'execjs'
+require 'alaska/runtime'
 
 describe Alaska do
   before do

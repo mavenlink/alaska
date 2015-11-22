@@ -1,6 +1,9 @@
-require "execjs/runtime"
-require "execjs/module"
 require 'tempfile'
+
+require 'execjs/runtime'
+require 'execjs/module'
+
+require 'alaska/context'
 
 module Alaska
   class Runtime < ExecJS::Runtime
@@ -73,7 +76,7 @@ module Alaska
           path
         end
 
-        alaska_js_path = File.join(File.dirname(File.expand_path(__FILE__)), '../alaska.js')
+        alaska_js_path = File.join(File.dirname(File.expand_path(__FILE__)), '../../alaska.js')
         command_options = [alaska_js_path, "--debug #{!!@debug}"] # --other --command-line --options --go --here
 
         @pid = Process.spawn({"PORT" => @port.to_s}, @nodejs_cmd, *command_options, {:err => :out})
