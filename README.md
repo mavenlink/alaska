@@ -45,13 +45,13 @@ gem 'alaska', :git => 'git@github.com:mavenlink/alaska.git'
 Or, if you prefer, the stable release channel is available via rubygems
 
 ```ruby
-gem 'alaska', '~> 1.0.0'
+gem 'alaska', '~> 1.0'
 ```
 
 Then in a rails initializer file (e.g. `config/initializers/execjs.rb`) declare the `ExecJS.runtime` to be an instance of `Alaska::Runtime`
 
 ```ruby
-require 'alaska'
+require 'alaska/runtime'
 
 if Rails.env == "development" || Rails.env == "test" || ENV["RAILS_GROUPS"] == "assets"
   # use alaska.js pipelining only when precompiling assets

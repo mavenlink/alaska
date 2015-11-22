@@ -1,9 +1,10 @@
-require "execjs/runtime"
-require "execjs/module"
-require "net/http"
-require "socket"
+require 'net/http'
+require 'socket'
 require 'tempfile'
 require 'json'
+
+require 'execjs/runtime'
+require 'execjs/module'
 
 module Alaska
   class Context < ExecJS::Runtime::Context
