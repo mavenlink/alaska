@@ -28,7 +28,7 @@ describe Alaska do
       js_result = @alaska_context.eval("return true;")
     }.must_raise(ExecJS::RuntimeError)
 
-    js_result.must_equal -1
+    js_result.must_equal(-1)
   end
 
   it "safely allows subsequent #eval calls after runtime error" do
@@ -104,7 +104,7 @@ describe Alaska do
 
     make_program_error_thread = Thread.new {
       begin
-        b = context_a.call("(function() { asd() })")
+        _b = context_a.call("(function() { asd() })")
       rescue => err_a
         g_err_a = err_a
       end
@@ -113,7 +113,7 @@ describe Alaska do
     context_b = ExecJS.compile("")
 
     begin
-      c = context_b.call("(function() { asd) })")
+      _c = context_b.call("(function() { asd) })")
     rescue => err_b
       g_err_b = err_b
     end
