@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    alaska (1.1.0)
+    alaska (1.2.0)
       execjs (~> 2.7)
 
 GEM
@@ -18,3 +18,6 @@ DEPENDENCIES
   alaska!
   minitest (~> 5.5)
   rake (~> 10.4)
+
+BUNDLED WITH
+   1.13.6

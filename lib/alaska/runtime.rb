@@ -23,8 +23,14 @@ module Alaska
     end
 
     def available?
-      #NOTE: this is brittle in terms of cross platform detection of node executable
-      `which #{@nodejs_cmd}`.strip.length > 0 # this must return true to be enabled
+      ENV["PATH"].split(":").detect do |path|
+        %w{
+          nodejs
+          node
+        }.detect do |node|
+          File.exist?(File.join(path, node)) || File.symlink?(File.join(path, node))
+        end
+      end
     end
 
     def deprecated?
