@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    alaska (1.2.0)
+    alaska (1.2.2)
       execjs (~> 2.7)
 
 GEM
