@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'alaska'
-  s.version     = '1.2.0'
+  s.version     = '1.2.1'
   s.date        = '2016-12-08'
   s.summary     = "persistent ExecJS runtime"
   s.description = "uses a single shared nodejs process to handle ExecJS::Runtime evaluation"
