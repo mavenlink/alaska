@@ -68,4 +68,7 @@ Listening on port /tmp/alaska20150223-8969-ds0fhl
 alaska.js started
 ```
 
-## DRILL BABY DRILL!
+## Alternatives / Work-a-likes
+
+* [execjs-fastnode](https://github.com/jhawthorn/execjs-fastnode)
+* [therubyracer](cowboyd/therubyracer)
