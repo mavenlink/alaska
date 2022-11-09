@@ -11,6 +11,6 @@ Gem::Specification.new do |s|
   s.license     = 'MIT'
 
   s.add_dependency 'execjs', '~> 2.7'
-  s.add_development_dependency 'rake', '~> 10.4'
+  s.add_development_dependency 'rake', '~> 12.3'
   s.add_development_dependency 'minitest', '~> 5.5'
 end

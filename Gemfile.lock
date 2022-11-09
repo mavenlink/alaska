@@ -9,7 +9,7 @@ GEM
   specs:
     execjs (2.7.0)
     minitest (5.5.1)
-    rake (10.4.2)
+    rake (12.3.3)
 
 PLATFORMS
   ruby
@@ -17,7 +17,7 @@ PLATFORMS
 DEPENDENCIES
   alaska!
   minitest (~> 5.5)
-  rake (~> 10.4)
+  rake (~> 12.3)
 
 BUNDLED WITH
    1.13.6
