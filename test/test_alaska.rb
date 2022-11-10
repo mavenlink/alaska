@@ -131,4 +131,12 @@ describe Alaska do
     exit_pid.must_equal(fork_test_harness_pid)
     exit_status.must_equal(0)
   end
+
+  it "should run for an extended duration of time" do
+    context_a = ExecJS.compile("")
+    500_000.times { |i|
+      result_a = context_a.call("(function(a) { return a; })", i)
+      result_a.must_equal i
+    }
+  end
 end
